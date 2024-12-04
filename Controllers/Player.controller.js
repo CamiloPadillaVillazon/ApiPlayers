@@ -14,36 +14,12 @@ module.exports = {
     },
     createNewPlayer: async (req, res, next) => {
         try {
-            const { transfers } = req.body;
-    
-            // Ensure evolution.prev is converted to ObjectId if present
-            if (transfers?.previousTeam) {
-                req.body.transfers.previousTeam = new mongoose.Types.ObjectId(transfers.previousTeam);
-            }
-    
-            // Ensure evolution.next is converted to an array of ObjectIds if present
-            if (transfers?.nextTeams?.length > 0) {
-                req.body.transfers.nextTeams = evolution.nextTeams.map(id => new mongoose.Types.ObjectId(id));
-            }
-    
+            req.body
             // Create and save the Player
+            console.log(req.body);
             const newPlayer = new Player(req.body);
             const result = await newPlayer.save();
-    
-            // Update the evolution relationships
-            if (transfers?.previousTeam) {
-                await Player.findByIdAndUpdate(transfers.previousTeam, {
-                    $addToSet: { "transfers.nextTeams": result._id }
-                });
-            }
-    
-            if (transfers?.nextTeams?.length > 0) {
-                await Player.updateMany(
-                    { _id: { $in: transfers.nextTeams } },
-                    { $set: { "transfers.previousTeam": result._id } }
-                );
-            }
-    
+
             res.status(201).send(result);
         } catch (error) {
             console.error(error.message);
