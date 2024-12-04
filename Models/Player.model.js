@@ -25,6 +25,10 @@ const PlayerSchema = new Schema({
         required: true,
         min: 0, // Valor mínimo de mercado
     },
+    image: {
+        type: String,
+        required: true
+    }
 });
 
 const Player = mongoose.model('Player', PlayerSchema);
