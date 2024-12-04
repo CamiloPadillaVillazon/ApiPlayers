@@ -6,6 +6,7 @@ module.exports = {
     getAllPlayers: async(req,res,next) =>{
         try{
             const results = await Player.find({}, {__v:0});
+            console.log(results);
             res.send(results);
         } catch(error) {
             console.log(error.message)

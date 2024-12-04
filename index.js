@@ -13,25 +13,19 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 
-// mongoose.connect(process.env.MONGODB_URI, {
-//     dbName: process.env.DB_NAME,
-//     user: process.env.DB_USER,
-//     pass: process.env.DB_PASS
-// }).then(() => {
-//     console.log('MongoDB HAS CONNECTED....');
-// });
+const MONGO_URI = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}/?${process.env.MONGODB_OPTIONS}`;
 
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    dbName: process.env.DB_NAME
+    dbName: process.env.DB_NAME,
 })
-.then(() => console.log('MongoDB connected successfully'))
-.catch(err => console.error('MongoDB connection error:', err));
+    .then(() => console.log('MongoDB connected successfully'))
+    .catch((err) => console.error('MongoDB connection error:', err));
 
 app.use('/player', PlayerRouter);
 
-app.use((req, res, next) =>{
+app.use((req, res, next) => {
     next(createError(404, "Not Found"));
 });
 
@@ -40,12 +34,12 @@ app.use((err, req, res, next) => {
     res.send({
         error: {
             status: err.status || 500,
-            message: err.message
-        }
-    })
+            message: err.message,
+        },
+    });
 });
 
-app.listen(3000, () =>
-    {
-        console.log('server started on port 3000')
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
 });

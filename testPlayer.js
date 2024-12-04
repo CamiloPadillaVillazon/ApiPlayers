@@ -16,7 +16,7 @@ mongoose.connect(process.env.MONGODB_URI, {
             name: 'Lionel Messi',
             age: 36,
             nationality: 'Argentina',
-            positions: ['Forward', 'Attacking Midfielder'],
+            positions: "ST, RW",
             value_euro: 50_000_000
         });
 
